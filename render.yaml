@@ -1,0 +1,38 @@
+# Blueprint de Render: crea la base PostgreSQL y el servicio web en un solo paso
+# (Render > New > Blueprint > elegir este repositorio).
+databases:
+  - name: retailflow-db
+    plan: free
+    databaseName: retailflow
+    user: retailflow
+
+services:
+  - type: web
+    name: retailflow-api
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      # Render completa estos valores con los datos de la base creada arriba
+      - key: DB_HOST
+        fromDatabase:
+          name: retailflow-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: retailflow-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: retailflow-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: retailflow-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: retailflow-db
+          property: password

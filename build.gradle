@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.5'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'cl.rinconsur'
+version = '1.0.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Web: controladores REST que responden JSON
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    // JPA/Hibernate: crea las tablas a partir de las entidades y hace las consultas
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // Validación de los JSON que llegan (@NotBlank, @Min, ...)
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // PostgreSQL en Render; H2 (base en memoria) para trabajar en el PC y para los tests
+    runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'com.h2database:h2'
+
+    // JUnit 5 + Mockito + MockMvc + AssertJ
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// Un solo jar ejecutable (el "plain" sobra para desplegar)
+tasks.named('jar') {
+    enabled = false
+}
